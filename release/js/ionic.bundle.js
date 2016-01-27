@@ -1,4 +1,11 @@
-/*!
+/*
+ * 1. GODYO Fix: Einpflge von "Fix for Incorrect content size after keyboard closed - issue #4193"
+ * https://github.com/bewebltd/ionic/commit/429d54b33b690a34fc635b16562e492fda5b4b0c
+ * 
+ * 2. GODYO Fix: Deep nested input-field is hidden by keyboard #4552
+ * https://github.com/driftyco/ionic/issues/4552
+ * 
+ * !
  * ionic.bundle.js is a concatenation of:
  * ionic.js, angular.js, angular-animate.js,
  * angular-sanitize.js, angular-ui-router.js,
@@ -350,7 +357,7 @@ window.ionic.version = '1.1.0';
      * className, or null.
      */
     getParentWithClass: function(e, className, depth) {
-      depth = depth || 10;
+      depth = depth || 100;
       while (e.parentNode && depth--) {
         if (e.parentNode.classList && e.parentNode.classList.contains(className)) {
           return e.parentNode;
@@ -3764,17 +3771,17 @@ function keyboardNativeShow(e) {
  * adjustments with a more accurate keyboard height.
  */
 function keyboardFocusIn(e) {
-  clearTimeout(keyboardFocusOutTimer);
   //console.log("keyboardFocusIn from: " + e.type + " at: " + Date.now());
 
   if (!e.target ||
       e.target.readOnly ||
       !ionic.tap.isKeyboardElement(e.target) ||
       !(scrollView = ionic.DomUtil.getParentWithClass(e.target, SCROLL_CONTAINER_CSS))) {
-    keyboardActiveElement = null;
     return;
   }
 
+  clearTimeout(keyboardFocusOutTimer);
+  
   keyboardActiveElement = e.target;
 
   // if using JS scrolling, undo the effects of native overflow scroll so the
@@ -25256,7 +25263,7 @@ function adjustMatchers(matchers) {
  *
  * - your app is hosted at url `http://myapp.example.com/`
  * - but some of your templates are hosted on other domains you control such as
- *   `http://srv01.assets.example.com/`,  `http://srv02.assets.example.com/`, etc.
+ *   `http://srv01.assets.example.com/`,  `http://srv02.assets.example.com/`, etc.
  * - and you have an open redirect at `http://myapp.example.com/clickThru?...`.
  *
  * Here is what a secure configuration for this scenario might look like:
